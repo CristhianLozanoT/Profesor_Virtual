@@ -6,6 +6,12 @@ from .models import Archivo, Tema, Conversacion
 from .serializers import *  # Importar todas las serializadores desde serializers.py
 from django.contrib.auth import get_user_model
 from rest_framework.generics import ListAPIView
+from .utils import extraer_texto_de_archivo, dividir_en_parrafos, vectorizar_fragmentos
+from .models import FragmentoVectorizado
+import os
+from .utils import extraer_texto_de_archivo, dividir_en_parrafos, vectorizar_fragmentos
+
+
 
 
 User = get_user_model()
@@ -24,11 +30,21 @@ class ArchivoUploadView(generics.CreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
-        # Primero, guarda el archivo
         archivo = serializer.save(profesor=self.request.user)
-        
-        # Luego, crea el tema asociado a ese archivo
-        Tema.objects.create(archivo=archivo, titulo=f"Tema para el archivo {archivo.titulo}")
+        tema = Tema.objects.create(archivo=archivo, titulo=f"Tema para {archivo.titulo}")
+
+        ruta = archivo.archivo.path
+        texto = extraer_texto_de_archivo(ruta)
+        fragmentos = dividir_en_parrafos(texto)
+        vectores = vectorizar_fragmentos(fragmentos)
+
+        for texto, vector in zip(fragmentos, vectores):
+            FragmentoVectorizado.objects.create(
+                archivo=archivo,
+                tema=tema,
+                texto=texto,
+                vector=vector
+            )
 
 class ListadoTemasView(generics.ListAPIView):
     queryset = Tema.objects.all()

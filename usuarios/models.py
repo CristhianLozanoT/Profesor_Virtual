@@ -25,3 +25,8 @@ class Conversacion(models.Model):
 
     def __str__(self):
         return f"{self.estudiante.username} - {self.pregunta[:30]}"
+class FragmentoVectorizado(models.Model):
+    archivo = models.ForeignKey(Archivo, on_delete=models.CASCADE)
+    tema = models.ForeignKey(Tema, on_delete=models.CASCADE)
+    texto = models.TextField()
+    vector = models.JSONField()
