@@ -32,4 +32,9 @@ class TemaSerializer(serializers.ModelSerializer):
 class ConversacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversacion
-        fields = '__all__'
+        fields = ['id_conversacion', 'pregunta', 'tema', 'respuesta', 'estudiante']
+        extra_kwargs = {
+            'respuesta': {'read_only': True},
+            'estudiante': {'read_only': True},
+            'id_conversacion': {'required': False},  # Hacerlo opcional
+        }
