@@ -10,11 +10,24 @@ from .utils import extraer_texto_de_archivo, dividir_en_parrafos, vectorizar_fra
 from .models import FragmentoVectorizado
 import os
 from .utils import extraer_texto_de_archivo, dividir_en_parrafos, vectorizar_fragmentos
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAuthenticated
 
 
 
 
 User = get_user_model()
+
+class UsuarioActualView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            "username": user.username,
+            "is_profesor": user.is_profesor,
+            "is_estudiante": user.is_estudiante,
+        })
 
 class RegistroView(generics.CreateAPIView):
     queryset = User.objects.all()

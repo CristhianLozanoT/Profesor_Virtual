@@ -23,6 +23,7 @@ class ArchivoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Archivo
         fields = '__all__'
+        read_only_fields = ['profesor', 'fecha_subida']
 
 class TemaSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,4 +33,5 @@ class TemaSerializer(serializers.ModelSerializer):
 class ConversacionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Conversacion
-        fields = '__all__'
+        fields = ['id', 'pregunta', 'respuesta', 'tema', 'estudiante', 'fecha']
+        read_only_fields = ['respuesta', 'estudiante', 'fecha']

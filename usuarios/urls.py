@@ -7,4 +7,6 @@ urlpatterns = [
     path('temas/', ListadoTemasView.as_view(), name='temas'),
     path('preguntar/', PreguntaView.as_view(), name='preguntar'),
     path('historial/', HistorialPreguntasView.as_view(), name='historial_preguntas'),
+    path('user/', UsuarioActualView.as_view(), name='usuario_actual'),
+
 ]
